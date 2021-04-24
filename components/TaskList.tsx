@@ -8,12 +8,12 @@ export default function TaskList() {
   const { changed } = useContext(TodosContext);
 
   useEffect(() => {
-    fetch("http://localhost:5001/todos")
+    fetch("http://192.168.40.77:5001/todos")
       .then((res) => res.json())
       .then((datas) => setTodo(datas.data))
       .catch((err) => console.log(err));
   }, [changed]);
-  console.log(todos);
+  // console.log(todos);
 
   return (
     <FlatList

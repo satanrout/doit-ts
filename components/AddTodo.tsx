@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, TouchableHighlight } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { TodosContext } from "../context/todosContext";
 
-export default function AddTodo(item) {
+export default function AddTodo() {
   const [todo, setTodo] = useState("");
   const { changed, setChanged } = useContext(TodosContext);
   const addTodo = async () => {
@@ -17,14 +17,14 @@ export default function AddTodo(item) {
     };
 
     try {
-      setTodo("");
       const fetchResponse = await fetch(
-        "http://localhost:5001/todos",
+        "http://192.168.40.77:5001/todos",
         settings
       );
       const data = await fetchResponse.json();
       await console.log(data);
       setChanged(!changed);
+      await setTodo("");
     } catch (error) {
       console.log(error);
     }
@@ -33,7 +33,7 @@ export default function AddTodo(item) {
   return (
     <View style={styles.addtodo}>
       <TextInput
-        onChange={(e) => setTodo(e.target.value)}
+        onChangeText={(text) => setTodo(text)}
         placeholder="add todo"
         value={todo}
         style={styles.add}

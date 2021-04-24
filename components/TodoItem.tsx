@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { TodosContext } from "../context/todosContext";
@@ -14,18 +15,22 @@ export default function TodoItem({ item }) {
   const [checked, setChecked] = useState(false);
   const [edit, setEdit] = useState(false);
   const [todo, setTodo] = useState(item.todo);
-
+  console.log(todo);
   const deleteTodo = async () => {
-    const response = await fetch(`http://localhost:5001/todos/${item._id}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `http://192.168.40.77:5001/todos/${item._id}`,
+      {
+        method: "DELETE",
+      }
+    );
     const data = await response.json();
     setChanged(!changed);
     await console.log(data);
   };
 
   const changeTodo = async () => {
-    setEdit(!edit);
+    await console.log(todo);
+    await setEdit(!edit);
     const settings = {
       method: "PUT",
       headers: {
@@ -35,7 +40,7 @@ export default function TodoItem({ item }) {
       body: JSON.stringify({ todo }),
     };
     const response = await fetch(
-      `http://localhost:5001/todos/${item._id}`,
+      `http://192.168.40.77:5001/todos/${item._id}`,
       settings
     );
     const data = await response.json();
@@ -51,11 +56,13 @@ export default function TodoItem({ item }) {
           style={checked ? styles.colorLeft : styles.colorleft}
         ></TouchableOpacity>
         {edit ? (
-          <TextInput
-            style={styles.itemText}
-            value={todo}
-            onChange={(e) => setTodo(e.target.value)}
-          />
+          <KeyboardAvoidingView behavior="padding">
+            <TextInput
+              onChangeText={(text) => setTodo(text)}
+              value={todo}
+              accessibilityLabel="editTodo"
+            />
+          </KeyboardAvoidingView>
         ) : (
           <Text style={styles.itemText}>{item.todo}</Text>
         )}
@@ -106,6 +113,15 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     marginRight: 15,
+  },
+  editText: {
+    color: "white",
+    textTransform: "uppercase",
+    fontSize: 16,
+    fontWeight: "bold",
+    backgroundColor: "green",
+    height: 32,
+    width: 250,
   },
   item: {
     display: "flex",
